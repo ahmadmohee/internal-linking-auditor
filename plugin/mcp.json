@@ -3,7 +3,7 @@
   "mcpServers": {
     "internal-linking-auditor": {
       "type": "streamable-http",
-      "url": "https://seo.example.com/mcp"
+      "url": "https://site--internal-linking-auditor--rv9l9q47dr9k.code.run/mcp"
     }
   }
 }
