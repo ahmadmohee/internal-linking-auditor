@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "internal-linking-auditor",
+  "version": "0.1.0",
+  "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
+  "author": {
+    "name": "Ahmad Mohee",
+    "email": "ahmadmohee@gmail.com",
+    "url": "https://www.linkedin.com/in/ahmadmohee/"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Internal Linking Auditor",
+        "shortDescription": "Audit internal links for SEO",
+        "longDescription": "Run a technical SEO internal linking audit with Google Search Console. Upload the Internal Links CSV and Performance Pages.csv from the same property. Find important pages with few reported internal links, prioritize targets by search impressions and clicks, and discover relevant pages to link from. Add Screaming Frog crawl and All Inlinks exports to exclude links already observed, suggest descriptive anchor text, and flag internal links that point to redirects or error URLs.\n\nTry asking:\n- Which important pages on my website have too few internal links?\n- Where should I add internal links, and what anchor text should I use?\n- Which internal links point to a 404 or a redirect?\n\nLooking for orphan pages? The tool lists URLs missing from the Search Console Links report for follow-up. If a URL is absent from that sampled report, its link count is unknown. Review the suggested links on your live pages before editing.",
+        "developerName": "Ahmad Mohee",
+        "category": "Productivity",
+        "supportURL": "https://www.linkedin.com/in/ahmadmohee/",
+        "defaultPrompt": [
+          "Which important pages on my website have too few internal links?",
+          "Where should I add internal links, and what anchor text should I use?",
+          "Which internal links point to a 404 or a redirect?"
+        ]
+      }
+    }
+  }
+}

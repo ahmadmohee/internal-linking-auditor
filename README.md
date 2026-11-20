@@ -1,6 +1,6 @@
 # Internal Linking Auditor
 
-A ChatGPT Plugin to help you audit and optimize your website's internal linking profile.
+A ChatGPT Plugin to help you audit and optimize your website internal linking profile.
 
 Run a technical SEO internal linking audit with Google Search Console. Upload the Internal Links CSV and Performance Pages.csv from the same property. Find important pages with few reported internal links, prioritize targets by search impressions and clicks, and discover relevant pages to link from. Add Screaming Frog crawl and All Inlinks exports to exclude links already observed, suggest descriptive anchor text, and flag internal links that point to redirects or error URLs.
 

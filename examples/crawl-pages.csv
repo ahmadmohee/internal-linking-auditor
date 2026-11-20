@@ -1,0 +1,12 @@
+Address,Content Type,Status Code,Indexability,Title 1,H1-1,Canonical Link Element 1
+https://example.com/,text/html,200,Indexable,Example Shoes,Example Shoes,https://example.com/
+https://example.com/shoes/waterproof-trail-running-shoes,text/html,200,Indexable,Waterproof Trail Running Shoes,Waterproof Trail Running Shoes,https://example.com/shoes/waterproof-trail-running-shoes
+https://example.com/guides/trail-running-shoes,text/html,200,Indexable,Trail Running Shoes Guide,Choosing Trail Running Shoes,
+https://example.com/guides/waterproof-trail-running-shoes,text/html,200,Indexable,How to Choose Waterproof Trail Running Shoes,Waterproof Trail Running Shoes Buying Guide,
+https://example.com/guides/trail-running-shoe-fit,text/html,200,Indexable,Trail Running Shoe Fit and Sizing,Trail Running Shoe Fit,
+https://example.com/guides/trail-running-waterproof-checklist,text/html,200,Indexable,Trail Running Waterproof Checklist,Waterproof Trail Running Gear Checklist,
+https://example.com/shoes/trail-running-shoe-sizing,text/html,200,Indexable,Trail Running Shoe Sizing,Trail Running Shoe Sizing,
+https://example.com/guides/road-running-shoes,text/html,200,Indexable,Road Running Shoes,Road Running Shoes,
+https://example.com/old-waterproof-shoes,text/html,301,Non-Indexable,,,
+https://example.com/retired-trail-shoes,text/html,404,Non-Indexable,,,
+https://example.com/fr/guides/trail-running-shoes,text/html,200,Indexable,Trail Running Shoes in French,Trail Running Shoes,
