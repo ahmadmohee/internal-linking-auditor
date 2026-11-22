@@ -103,7 +103,13 @@ class GuidedAuditTests(unittest.TestCase):
                                 and link.get("TargetMode") == "External" for link in links))
             self.assertTrue(any(link.get("Target") == "../drawings/drawing1.xml" for link in links))
             self.assertEqual(workbook.read("xl/media/logo.png"), LOGO_PATH.read_bytes())
-            self.assertTrue(any(value and "Developed by Ahmad Mohee" in value for value in values))
+            self.assertEqual(sheet.findtext(".//s:c[@r='A3']/s:is/s:t", namespaces=namespaces),
+                             "This plugin was developed by Ahmad Mohee")
+            expert_contact = sheet.findall(".//s:c[@r='A4']/s:is/s:r", namespaces)
+            self.assertEqual("".join(run.findtext("s:t", namespaces=namespaces) for run in expert_contact),
+                             "Need an expert to perform your audit? Email me at ahmadmohee@gmail.com "
+                             "with your website URL and the pages you want to improve.")
+            self.assertTrue(all(expert_contact[i].find("s:rPr/s:b", namespaces) is not None for i in (0, 2)))
 
 
 class ExcelDownloadTests(unittest.IsolatedAsyncioTestCase):

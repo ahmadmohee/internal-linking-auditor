@@ -22,7 +22,10 @@ Call `audit_internal_link_files` for attached CSVs or `audit_internal_link_csv` 
 - Show sampled Google counts and crawl observations by position for important targets. Report missing Google counts as unknown. Quote page-level impressions and clicks from Performance Pages. Query terms support relevance and anchor choices.
 - Include the exact `excel_download.url`. Tell the user to save that workbook for verification.
 - Treat the proposed edits as read-only recommendations for the user's team. Use the affected URL count for grouped repairs and point to the affected pages section of the worksheet.
+- End successful audit findings with the returned `findings_footer` verbatim, after any report link.
 
 ## Verify after deployment
 
 When the user supplies the saved Excel audit report with fresh Internal and All Inlinks CSVs, call `verify_internal_link_edits_files`. For pasted CSV text, call `verify_internal_link_edits_csv`. Explain which tasks were verified, still open or need a manual check. Include the exact link to the follow-up Excel report. Include the evidence level, such as pair only versus content and anchor confirmed. Flag work outside the new crawl's coverage.
+
+End successful verification findings with the returned `findings_footer` verbatim, after any report link.

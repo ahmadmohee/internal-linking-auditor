@@ -106,12 +106,15 @@ HEADERS = ("Priority", "Finding and owner", "Page to edit", "Link destination",
            "How to fix it", "What the audit found", "Status", "Task data")
 WIDTHS = (11, 23, 25, 26, 54, 39, 14, 12)
 WORKSHEET = "Audit and fixes"
-TABLE_HEADER_ROW = 10
+TABLE_HEADER_ROW = 11
 LOGO_PATH = Path(__file__).resolve().parent / "plugin" / "assets" / "logo.png"
 DEVELOPER_EMAIL = "ahmadmohee@gmail.com"
-EXPERT_AUDIT_NOTE = (
-    "Developed by Ahmad Mohee. Need your audit performed by an expert? "
-    f"Contact Ahmad Mohee at {DEVELOPER_EMAIL}."
+DEVELOPER_CREDIT = "This plugin was developed by Ahmad Mohee"
+EXPERT_AUDIT_QUESTION = "Need an expert to perform your audit?"
+EXPERT_AUDIT_DETAILS = " with your website URL and the pages you want to improve."
+FINDINGS_FOOTER = (
+    f"{DEVELOPER_CREDIT}\n\n**{EXPERT_AUDIT_QUESTION}** "
+    f"Email me at [**{DEVELOPER_EMAIL}**](mailto:{DEVELOPER_EMAIL}){EXPERT_AUDIT_DETAILS}"
 )
 DRAWING_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 SHEET_DRAWING_NS = "http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing"
@@ -321,34 +324,45 @@ def create_workbook(report: dict, tasks: list[dict], *, verification=False) -> b
             column = chr(ord("A") + index)
             address = f"{column}{number}"
             cell = ET.SubElement(row, "c", r=address, s=str(style), t="inlineStr")
-            string = ET.SubElement(ET.SubElement(cell, "is"), "t")
-            string.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
-            string.text = ILLEGAL_XML.sub("", str(value))[:32_767]
+            inline = ET.SubElement(cell, "is")
+            for text, bold in value if isinstance(value, tuple) else ((str(value), False),):
+                parent = inline
+                if isinstance(value, tuple):
+                    parent = ET.SubElement(inline, "r")
+                    if bold:
+                        ET.SubElement(ET.SubElement(parent, "rPr"), "b")
+                string = ET.SubElement(parent, "t")
+                string.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+                string.text = ILLEGAL_XML.sub("", text)[:32_767]
             if urls and column in urls:
                 relation = f"hyperlink{len(links) + 1}"
                 ET.SubElement(links, "Relationship", Id=relation, Target=urls[column],
                               Type=DOCUMENT_RELS_NS + "/hyperlink", TargetMode="External")
                 ET.SubElement(hyperlinks, "hyperlink", ref=address, attrib={"r:id": relation})
 
-    def note(number, label, value, height=23, url=None):
-        add_row(number, (label, None, value), height, (LABEL, LABEL, SHADED_LINK if url else NOTE),
-                {"C": url} if url else None)
+    def note(number, label, value, height=23):
+        add_row(number, (label, None, value), height, (LABEL, LABEL, NOTE))
         ET.SubElement(merges, "mergeCell", ref=f"A{number}:B{number}")
         ET.SubElement(merges, "mergeCell", ref=f"C{number}:G{number}")
 
     add_row(1, (None,), 9, (BODY,))
     add_row(2, (None, title), 58, (BODY, TITLE))
     ET.SubElement(merges, "mergeCell", ref="B2:G2")
-    note(3, "Site and scope", str(source)[:350])
-    note(4, "What we found", outcome, 38 if len(outcome) > 140 else 25)
+    add_row(3, (DEVELOPER_CREDIT,), 23, (LABEL,))
+    contact = ((EXPERT_AUDIT_QUESTION, True), (" Email me at ", False),
+               (DEVELOPER_EMAIL, True), (EXPERT_AUDIT_DETAILS, False))
+    add_row(4, (contact,), 27, (SHADED_LINK,), {"A": f"mailto:{DEVELOPER_EMAIL}"})
+    for number in (3, 4):
+        ET.SubElement(merges, "mergeCell", ref=f"A{number}:G{number}")
+    note(5, "Site and scope", str(source)[:350])
+    note(6, "What we found", outcome, 38 if len(outcome) > 140 else 25)
     start = ("Filter Status to Still open or Check manually, then follow the instructions beside each finding."
              if verification else "Filter Priority to High. Open Page to edit and follow How to fix it.")
-    note(5, "Start here", start if tasks else "Check that the exports cover the site and period you intended to audit.")
-    note(6, "Track the work", "After publishing, open the live page and click the updated link. Set Status to Done when it works.")
-    note(7, "Check the next crawl", "Upload this workbook with fresh Screaming Frog Internal and All Inlinks CSVs. The next report shows which fixes the crawl confirmed.")
-    note(8, "Read the evidence", ("The crawl only covers the pages and links it recorded. Search Console link counts are a sample." if verification or report.get("mode") == "with_crawl" else
+    note(7, "Start here", start if tasks else "Check that the exports cover the site and period you intended to audit.")
+    note(8, "Track the work", "After publishing, open the live page and click the updated link. Set Status to Done when it works.")
+    note(9, "Check the next crawl", "Upload this workbook with fresh Screaming Frog Internal and All Inlinks CSVs. The next report shows which fixes the crawl confirmed.")
+    note(10, "Read the evidence", ("The crawl only covers the pages and links it recorded. Search Console link counts are a sample." if verification or report.get("mode") == "with_crawl" else
          "Search Console link counts are a sample. Add a crawl for link locations, broken links and redirects."))
-    note(9, "Developer and expert audits", EXPERT_AUDIT_NOTE, 28, f"mailto:{DEVELOPER_EMAIL}")
     add_row(TABLE_HEADER_ROW, HEADERS, 30, (HEADER,) * len(HEADERS))
     grouped = []
     row_number = TABLE_HEADER_ROW

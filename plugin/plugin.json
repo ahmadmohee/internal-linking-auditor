@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
   "author": {
     "name": "Ahmad Mohee",
@@ -16,6 +16,7 @@
         "longDescription": "Audit your website’s internal links with Google Search Console and optional Screaming Frog exports. Get one Excel sheet that explains what the audit found, which pages to edit first, and how to fix each issue. It includes clickable page links, suggested link text, and steps for checking changes after publishing. Upload the saved report and a fresh crawl to see which fixes the crawl confirms.",
         "developerName": "Ahmad Mohee",
         "category": "Productivity",
+        "websiteURL": "https://www.linkedin.com/pulse/internal-link-audit-search-console-chatgpt-linking-auditor-mohee-0clle",
         "supportURL": "https://www.linkedin.com/in/ahmadmohee/",
         "defaultPrompt": [
           "Start an internal linking audit. What website details and Search Console files do you need?",

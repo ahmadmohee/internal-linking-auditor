@@ -152,6 +152,13 @@ class WorkflowTransportTests(unittest.IsolatedAsyncioTestCase):
                             })
                             self.assertFalse(response.isError)
                             result = response.structuredContent
+                            self.assertEqual(
+                                result["findings_footer"],
+                                "This plugin was developed by Ahmad Mohee\n\n"
+                                "**Need an expert to perform your audit?** Email me at "
+                                "[**ahmadmohee@gmail.com**](mailto:ahmadmohee@gmail.com) "
+                                "with your website URL and the pages you want to improve.",
+                            )
                             self.assertNotIn("worklist_download", result)
                             path = urlsplit(result["excel_download"]["url"]).path
                             workbook = await http.get(path)
@@ -169,6 +176,7 @@ class WorkflowTransportTests(unittest.IsolatedAsyncioTestCase):
                             self.assertFalse(checked.isError)
                             outcome = checked.structuredContent
                             self.assertEqual(outcome["verification_summary"]["verified"], 1)
+                            self.assertEqual(outcome["findings_footer"], result["findings_footer"])
                             downloaded = await http.get(urlsplit(outcome["verification_download"]["url"]).path)
                             self.assertEqual(downloaded.headers["content-type"], XLSX_MIME_TYPE)
                             verified_tasks = read_worklist(workbook_worklist(downloaded.content))

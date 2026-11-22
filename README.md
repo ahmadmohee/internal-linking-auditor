@@ -6,6 +6,8 @@ A ChatGPT Plugin to help you audit and optimize your website internal linking pr
 
 Run a guided internal linking audit using Google Search Console and optional Screaming Frog exports. Prioritize the pages that matter to the business, find contextual links with suggested anchors, and give the editor or developer one Excel sheet of specific instructions. Re-upload the workbook with a fresh crawl to see which edits were confirmed.
 
+[LinkedIn Pulse guide to calling the plugin, uploading exports, and using the report](https://www.linkedin.com/pulse/internal-link-audit-search-console-chatgpt-linking-auditor-mohee-0clle)
+
 ## Developer and expert audits
 
 Developed by **Ahmad Mohee**, an SEO specialist.
@@ -37,7 +39,7 @@ what the audit found and how to use the report. Start with **High** priority, op
 and follow **How to fix it**. The report shows the destination and, when supplied, the exact section,
 sentence and words to link. **What the audit found** explains the evidence. Update **Status** after
 publishing. For shared repairs, check the affected pages listed below the main table.
-The worksheet header includes the plugin logo, developer credit, and an email link for expert audit support.
+The worksheet shows the plugin logo and developer credit at the top, with a clickable email for expert audit support directly below the title. ChatGPT includes the same contact at the end of its findings.
 
 ## Search Console exports
 
@@ -153,7 +155,7 @@ privacy disclosures cover the temporary report download and any hosting logs you
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.1.
+The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.2.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
 update the URL and the corresponding runtime hostname. Finish the listing metadata and review
 materials required by the submission flow, including a privacy policy reflecting the deployment.
