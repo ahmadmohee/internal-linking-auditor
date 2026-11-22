@@ -1,10 +1,10 @@
-Type,Source,Destination,Anchor
-Hyperlink,https://example.com/,https://example.com/guides/trail-running-shoes,Trail running shoes guide
-Hyperlink,https://example.com/guides/trail-running-shoes,https://example.com/guides/trail-running-shoe-fit,Shoe fit guide
-Hyperlink,https://example.com/guides/waterproof-trail-running-shoes,https://example.com/shoes/waterproof-trail-running-shoes,Waterproof trail running shoes
-Hyperlink,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/old-waterproof-shoes,Shop waterproof shoes
-Hyperlink,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/retired-trail-shoes,See previous trail shoes
-Hyperlink,https://example.com/guides/trail-running-shoe-fit,https://example.com/shoes/trail-running-shoe-sizing,Trail running shoe sizing
-Hyperlink,https://example.com/guides/road-running-shoes,https://example.com/,Home
-Hyperlink,https://example.com/fr/guides/trail-running-shoes,https://example.com/,Accueil
-Canonical,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/shoes/waterproof-trail-running-shoes,
+Type,Source,Destination,Anchor,Link Position
+Hyperlink,https://example.com/,https://example.com/guides/trail-running-shoes,Trail running shoes guide,Navigation
+Hyperlink,https://example.com/guides/trail-running-shoes,https://example.com/guides/trail-running-shoe-fit,Shoe fit guide,Content
+Hyperlink,https://example.com/guides/waterproof-trail-running-shoes,https://example.com/shoes/waterproof-trail-running-shoes,Read more,Content
+Hyperlink,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/old-waterproof-shoes,Shop waterproof shoes,Content
+Hyperlink,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/retired-trail-shoes,See previous trail shoes,Content
+Hyperlink,https://example.com/guides/trail-running-shoe-fit,https://example.com/shoes/trail-running-shoe-sizing,Trail running shoe sizing,Content
+Hyperlink,https://example.com/guides/road-running-shoes,https://example.com/,Home,Content
+Hyperlink,https://example.com/fr/guides/trail-running-shoes,https://example.com/,Accueil,Content
+Canonical,https://example.com/guides/trail-running-waterproof-checklist,https://example.com/shoes/waterproof-trail-running-shoes,,Content
