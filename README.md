@@ -6,6 +6,8 @@ A ChatGPT Plugin to help you audit and optimize your website internal linking pr
 
 Run a guided internal linking audit using Google Search Console and optional Screaming Frog exports. Prioritize the pages that matter to the business, find contextual links with suggested anchors, and give the editor or developer one Excel sheet of specific instructions. Re-upload the workbook with a fresh crawl to see which edits were confirmed.
 
+[Plugin website](https://www.dbc21.com/p/internal-linking-auditor.html) · [Support](https://www.dbc21.com/p/contact.html) · [Privacy Policy](https://www.dbc21.com/p/privacy.html) · [Terms of Service](https://www.dbc21.com/p/terms-of-service.html)
+
 [LinkedIn Pulse guide to calling the plugin, uploading exports, and using the report](https://www.linkedin.com/pulse/internal-link-audit-search-console-chatgpt-linking-auditor-mohee-0clle)
 
 ## Developer and expert audits
@@ -15,7 +17,7 @@ Developed by **Ahmad Mohee**, an SEO specialist.
 **Need your audit performed by an expert?** Contact Ahmad Mohee at [ahmadmohee@gmail.com](mailto:ahmadmohee@gmail.com).
 I can help review your internal-link opportunities, choose the pages worth linking to first, and turn the findings into an editing plan for your team.
 
-- [Ahmad Mohee on LinkedIn](https://www.linkedin.com/in/ahmadmohee/)
+- [About Ahmad Mohee](https://www.dbc21.com/p/about.html) · [LinkedIn](https://www.linkedin.com/in/ahmadmohee/)
 
 ## Questions you can ask in ChatGPT
 
@@ -35,7 +37,8 @@ section URL such as `https://example.com/shoes/` to limit targets while consider
 pages elsewhere on the same site.
 
 ChatGPT returns one Excel workbook with one worksheet, **Audit and fixes**. The first rows explain
-what the audit found and how to use the report. Start with **High** priority, open **Page to edit**,
+what the audit found and how to use the report. ChatGPT uses the same starting priorities and task counts.
+Start at the top of the worksheet, open **Page to edit**,
 and follow **How to fix it**. The report shows the destination and, when supplied, the exact section,
 sentence and words to link. **What the audit found** explains the evidence. Update **Status** after
 publishing. For shared repairs, check the affected pages listed below the main table.
@@ -159,11 +162,11 @@ reports and any hosting logs you collect.
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.4.
+The `plugin/` folder contains the manifests, review cases, and guided onboarding workflow for v0.5.5.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
-update the URL and the corresponding runtime hostname. Finish the listing metadata and review
-materials required by the submission flow, including a privacy policy reflecting the deployment.
-The outer source ZIP is for development. Use the configured plugin directory when preparing the submission.
+update the URL and the corresponding runtime hostname. The listing points to the DBC21 product, support,
+privacy and terms pages. Add a reviewer-accessible demo recording in the submission portal.
+Use the source ZIP for deployment. Use the contents of `plugin/` at the root of the directory submission ZIP.
 
 - [Google Search Console Links report](https://support.google.com/webmasters/answer/9049606)
 - [Export Search Console data](https://support.google.com/webmasters/answer/12919797)
