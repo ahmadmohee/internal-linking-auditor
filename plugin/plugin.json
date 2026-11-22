@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
   "author": {
     "name": "Ahmad Mohee",
@@ -16,8 +16,8 @@
         "longDescription": "Audit your website’s internal links with Google Search Console and optional Screaming Frog exports. Get one Excel sheet that explains what the audit found, which pages to edit first, and how to fix each issue. It includes clickable page links, suggested link text, and steps for checking changes after publishing. Upload the saved report and a fresh crawl to see which fixes the crawl confirms.",
         "developerName": "Ahmad Mohee",
         "category": "Productivity",
-        "websiteURL": "https://www.linkedin.com/pulse/internal-link-audit-search-console-chatgpt-linking-auditor-mohee-0clle",
-        "supportURL": "https://www.linkedin.com/in/ahmadmohee/",
+        "websiteURL": "https://www.dbc21.com/p/internal-linking-auditor.html",
+        "supportURL": "https://www.dbc21.com/p/contact.html",
         "defaultPrompt": [
           "Start an internal linking audit. What website details and Search Console files do you need?",
           "Find the internal links I should add or fix and give me one Excel report with exact instructions.",
@@ -25,9 +25,86 @@
         ],
         "composerIcon": "./assets/logo.png",
         "logo": "./assets/logo.png",
-        "brandColor": "#163D52"
+        "brandColor": "#163D52",
+        "privacyPolicyURL": "https://www.dbc21.com/p/privacy.html",
+        "termsOfServiceURL": "https://www.dbc21.com/p/terms-of-service.html"
       },
-      "onboardingSkill": "./skills/guided-internal-linking-audit/SKILL.md"
+      "onboardingSkill": "./skills/guided-internal-linking-audit/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Guide a user who only supplied the website",
+              "prompt": "Start an internal linking audit for https://example.com. What do you need from me?",
+              "tools_triggered": "start_internal_linking_audit",
+              "expected_behavior": "Asks for keyword phrases or a general audit, identifies the two required Search Console CSVs, and explains what the Excel report will contain."
+            },
+            {
+              "description": "Run the basic audit with both CSV attachments",
+              "prompt": "Audit https://example.com generally using my attached Internal Links and Performance Pages CSVs. Give me one Excel report and explain what I should do first.",
+              "tools_triggered": "audit_internal_link_files",
+              "expected_behavior": "Returns one working Excel link and explains the first actions in workbook order. Treats source suggestions as candidates and reports missing Search Console link counts as unknown.",
+              "file_attachment_urls": [
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/pages.csv"
+              ]
+            },
+            {
+              "description": "Use crawl and snippet evidence to prioritize exact edits",
+              "prompt": "Audit https://example.com using my attached CSVs. Focus on heat pump installation and prioritize https://example.com/services/heat-pump-installation. Use the before crawl and snippets. Give me an Excel report with the precise placements and show the evidence.",
+              "tools_triggered": "audit_internal_link_files",
+              "expected_behavior": "Shows two high-priority content placements first in both chat and Excel, with the source, sentence and anchor, plus zero observed main-content sources and nine navigation sources for the priority destination in the supplied crawl.",
+              "file_attachment_urls": [
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-inlinks-before.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/snippets.csv"
+              ]
+            },
+            {
+              "description": "Verify links using the workbook from the previous case",
+              "prompt": "In the same chat as the crawl and snippets test, reattach its downloaded Excel workbook together with crawl-pages.csv and crawl-inlinks-after.csv from https://github.com/ahmadmohee/internal-linking-auditor/tree/v0.5.4/examples/sprint. Which edits are confirmed?",
+              "tools_triggered": "verify_internal_link_edits_files",
+              "expected_behavior": "Verifies the new content link from the running costs guide, leaves the sizing guide addition open, and provides one updated Excel report.",
+              "file_attachment_urls": [
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-inlinks-after.csv"
+              ]
+            },
+            {
+              "description": "Run the pasted CSV fallback",
+              "prompt": "Audit https://example.com as a general audit. Use my pasted exports below and give me an Excel report.\nInternal Links CSV:\nTarget page,Internal links\nhttps://example.com/,420\nhttps://example.com/guides/trail-running-shoes,22\nhttps://example.com/guides/waterproof-trail-running-shoes,18\nhttps://example.com/guides/trail-running-shoe-fit,16\nhttps://example.com/shoes/waterproof-trail-running-shoes,1\nhttps://example.com/guides/trail-running-waterproof-checklist,9\nhttps://example.com/guides/road-running-shoes,24\nPerformance Pages CSV:\nTop pages,Clicks,Impressions,CTR,Position\nhttps://example.com/,5130,69378,7.39%,3.7\nhttps://example.com/shoes/waterproof-trail-running-shoes,173,13620,1.27%,8.4\nhttps://example.com/guides/trail-running-shoes,650,16000,4.06%,5.2\nhttps://example.com/guides/waterproof-trail-running-shoes,411,10551,3.90%,7.2\nhttps://example.com/guides/trail-running-shoe-fit,270,9100,2.97%,8.8\nhttps://example.com/guides/trail-running-waterproof-checklist,304,8300,3.66%,6.3\nhttps://example.com/shoes/trail-running-shoe-sizing,62,6140,1.01%,12.3\nhttps://example.com/guides/road-running-shoes,212,5990,3.54%,8.1",
+              "tools_triggered": "audit_internal_link_csv",
+              "expected_behavior": "Uses the actual CSV text to return an audit and Excel link without asking for duplicate files."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Require the correct Search Console files before auditing",
+              "prompt": "I want a general internal linking audit of https://example.com. I only have Queries.csv. Run it now.",
+              "tools_triggered": "start_internal_linking_audit",
+              "expected_behavior": "Asks for Internal Links and Performance Pages CSV exports. Produces no findings or workbook."
+            },
+            {
+              "description": "Handle malformed export headers",
+              "prompt": "Run a general audit for https://example.com. Internal Links CSV:\nWrong,Columns\nabc,123\nPerformance Pages CSV:\nTop pages,Clicks,Impressions,CTR,Position\nhttps://example.com/,5130,69378,7.39%,3.7\nhttps://example.com/shoes/waterproof-trail-running-shoes,173,13620,1.27%,8.4\nhttps://example.com/guides/trail-running-shoes,650,16000,4.06%,5.2\nhttps://example.com/guides/waterproof-trail-running-shoes,411,10551,3.90%,7.2\nhttps://example.com/guides/trail-running-shoe-fit,270,9100,2.97%,8.8\nhttps://example.com/guides/trail-running-waterproof-checklist,304,8300,3.66%,6.3\nhttps://example.com/shoes/trail-running-shoe-sizing,62,6140,1.01%,12.3\nhttps://example.com/guides/road-running-shoes,212,5990,3.54%,8.1",
+              "tools_triggered": "audit_internal_link_csv",
+              "expected_behavior": "Asks for a corrected Internal Links export and does not manufacture a workbook."
+            },
+            {
+              "description": "Handle a partial crawl without claiming verification",
+              "prompt": "Verify the edits from my earlier Excel audit for https://example.com. I only have the fresh Internal pages export and I don't have All Inlinks.",
+              "expected_behavior": "Requests the missing fresh All Inlinks export and the saved workbook if it has not been supplied. Does not mark an edit verified."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Aligns the chat summary’s first actions and task counts with the downloadable Excel worklist. Adds DBC21 product, support, privacy, and terms links to the plugin listing."
+      }
     }
-  }
+  },
+  "homepage": "https://www.dbc21.com/p/internal-linking-auditor.html",
+  "repository": "https://github.com/ahmadmohee/internal-linking-auditor"
 }

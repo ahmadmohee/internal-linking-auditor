@@ -93,7 +93,9 @@ mcp = FastMCP(
         "user supplies the actual CSVs. In a guided audit, pass both website_url and focus_keywords, "
         "use max_targets=10 and sources_per_target=3 unless the user requests another scope, "
         "and use include_excel=True. Offer a single downloadable Excel report. "
-        "Summarize the first actions in plain language and include the excel download link exactly as returned. "
+        "Use start_here in its given order for the first actions and worklist_summary for task counts. "
+        "These match the downloadable worklist. Use the other findings fields for supporting evidence. "
+        "Include the excel download link exactly as returned, including its hostname and full path. "
         "Offer optional client priority URLs, content snippets, paired crawl exports, page queries and All Redirects. "
         "Quote exact placement only from a returned sentence. Label editorial candidates and unknown link evidence. "
         "When the user supplies a saved Excel report and fresh crawl, use verify_internal_link_edits_files "
@@ -196,10 +198,13 @@ def complete_report(report: dict, include_excel: bool) -> dict:
     report["next_actions"] = [
         dict(zip(names, row)) for row in list(first_action_by_target.values())[:5]
     ]
-    repairs, anchor_edits = existing_link_actions(report)
-    report["start_here"] = [*repairs[:2], *anchor_edits[:1], *report["next_actions"],
-                            *repairs[2:], *anchor_edits[1:]][:5]
     tasks = report.pop("worklist_tasks", None)
+    if tasks is None:
+        repairs, anchor_edits = existing_link_actions(report)
+        report["start_here"] = [*repairs[:2], *anchor_edits[:1], *report["next_actions"],
+                                *repairs[2:], *anchor_edits[1:]][:5]
+    else:
+        report["start_here"] = report["top_10_for_this_sprint"][:5]
     if include_excel:
         if PUBLIC_HOST:
             attach_report(report, "excel", create_workbook(report, tasks or []),

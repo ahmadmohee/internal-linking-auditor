@@ -1,6 +1,7 @@
 import csv
 import io
 import unittest
+from collections import Counter
 from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import urlsplit
@@ -167,6 +168,10 @@ class WorkflowTransportTests(unittest.IsolatedAsyncioTestCase):
                             self.assertEqual((await http.get(path.replace(".xlsx", ".csv"))).status_code, 404)
                             tasks = read_worklist(workbook_worklist(workbook.content))
                             self.assertEqual(sum(task["action"] == "add_link" for task in tasks), 2)
+                            self.assertEqual([task["action"] for task in tasks[:2]], ["add_link", "add_link"])
+                            self.assertEqual([task["task_id"] for task in result["start_here"]],
+                                             [task["task_id"] for task in tasks[:5]])
+                            self.assertEqual(result["worklist_summary"], Counter(task["action"] for task in tasks))
                             uploaded["audit.xlsx"] = workbook.content
                             checked = await client.call_tool("verify_internal_link_edits_files", {
                                 "worklist_file": {"download_url": "https://files.oaiusercontent.com/audit.xlsx", "file_id": "workbook"},

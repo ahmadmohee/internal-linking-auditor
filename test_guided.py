@@ -39,11 +39,16 @@ class GuidedAuditTests(unittest.TestCase):
 
     def test_start_here_distinguishes_evidence(self):
         result = server.audit_internal_link_csv(sample("links.csv"), sample("pages.csv"))
-        self.assertEqual(result["start_here"][0]["action"], "Verify source first")
+        self.assertEqual(result["start_here"][0]["action"], "review_candidate")
+        self.assertEqual(result["start_here"][0]["priority"], "Medium")
         result = server.audit_internal_link_csv(sample("links.csv"), sample("pages.csv"),
                                                sample("crawl-pages.csv"), sample("crawl-inlinks.csv"))
         self.assertEqual([item["action"] for item in result["start_here"][:3]],
-                         ["Repair broken link", "Replace redirect link", "Improve existing anchor"])
+                         ["repair_broken", "replace_redirect", "improve_anchor"])
+
+        legacy = server.audit_internal_link_csv(sample("links.csv"), sample("pages.csv"),
+                                              include_excel=False, include_worklist=False)
+        self.assertEqual(legacy["start_here"][0]["action"], "Verify source first")
 
     def test_setup_asks_only_for_missing_answers(self):
         setup = server.start_internal_linking_audit("example.com")

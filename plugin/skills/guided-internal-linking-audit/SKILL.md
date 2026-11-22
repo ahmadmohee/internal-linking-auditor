@@ -17,10 +17,10 @@ Call `audit_internal_link_files` for attached CSVs or `audit_internal_link_csv` 
 
 ## Present the findings
 
-- Briefly state the scope and evidence. Explain the first two or three priorities and give the Excel report. Tell the user to start at the top of the worksheet, follow How to fix it, and update Status after publishing.
+- Briefly state the scope and evidence. Take the first two or three actions from `start_here` in the order returned and use `worklist_summary` for task counts when available. With an Excel report, those fields follow the worksheet’s task order and counts. Tell the user to start at the top of the worksheet, follow How to fix it, and update Status after publishing.
 - For supported placements, quote the returned sentence, include the heading if supplied, and state whether the anchor is already present or needs a small edit. Use **Review candidate** when the editor needs to find a passage or check coverage.
 - Show sampled Google counts and crawl observations by position for important targets. Report missing Google counts as unknown. Quote page-level impressions and clicks from Performance Pages. Query terms support relevance and anchor choices.
-- Include the exact `excel_download.url`. Tell the user to save that workbook for verification.
+- Include the exact `excel_download.url`, with its hostname and full path. Tell the user to download the workbook before the link expires and save it for verification.
 - Treat the proposed edits as read-only recommendations for the user's team. Use the affected URL count for grouped repairs and point to the affected pages section of the worksheet.
 - End successful audit findings with the returned `findings_footer` verbatim, after any report link.
 
