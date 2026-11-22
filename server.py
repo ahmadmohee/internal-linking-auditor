@@ -6,9 +6,12 @@ import os
 import re
 import secrets
 from collections import Counter, OrderedDict
+from contextlib import asynccontextmanager, suppress
+from dataclasses import dataclass
+from tempfile import TemporaryFile
 from threading import Lock
 from time import monotonic
-from typing import Annotated, Any
+from typing import Annotated, Any, BinaryIO
 from urllib.parse import urlsplit
 
 import httpx
@@ -17,7 +20,7 @@ from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import ToolAnnotations
 from pydantic import Field
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, StreamingResponse
 from typing_extensions import NotRequired, TypedDict
 
 from audit import MAX_FILE_BYTES, audit, clean_keywords, get_site_scope
@@ -30,9 +33,22 @@ ATTACHMENT_HOSTS = {"files.oaiusercontent.com"}
 INLINE_LIMIT = 150_000
 REPORT_PATH = "/internal-link-reports"
 REPORT_LIFETIME = 15 * 60
-MAX_REPORTS = 24
+MAX_REPORTS = 100
 MAX_REPORT_BYTES = 24 * 1024 * 1024
-REPORTS: OrderedDict[str, tuple[float, bytes, str, str]] = OrderedDict()
+REPORT_CHUNK_SIZE = 64 * 1024
+REPORT_CLEANUP_INTERVAL = 30
+
+
+@dataclass(frozen=True)
+class CachedReport:
+    file: BinaryIO
+    expires_at: float
+    size: int
+    filename: str
+    media_type: str
+
+
+REPORTS: OrderedDict[str, CachedReport] = OrderedDict()
 REPORT_LOCK = Lock()
 PUBLIC_HOST = os.getenv("SEO_PUBLIC_MCP_HOST", "").strip().casefold()
 if PUBLIC_HOST and not re.fullmatch(r"[a-z0-9][a-z0-9.-]*\.[a-z]{2,63}", PUBLIC_HOST):
@@ -155,8 +171,16 @@ def start_internal_linking_audit(
 
 
 def remove_expired_reports(now: float) -> None:
-    while REPORTS and next(iter(REPORTS.values()))[0] <= now:
-        REPORTS.popitem(last=False)
+    while REPORTS and next(iter(REPORTS.values())).expires_at <= now:
+        _, expired = REPORTS.popitem(last=False)
+        expired.file.close()
+
+
+async def expire_idle_reports() -> None:
+    while True:
+        await asyncio.sleep(REPORT_CLEANUP_INTERVAL)
+        with REPORT_LOCK:
+            remove_expired_reports(monotonic())
 
 
 def complete_report(report: dict, include_excel: bool) -> dict:
@@ -192,17 +216,31 @@ def attach_report(report, key, data, filename, media_type):
     if not PUBLIC_HOST:
         report[f"{key}_note"] = "A download requires a configured public MCP hostname. Use the CLI for the full file."
         return
-    if len(data) > MAX_FILE_BYTES:
+    size = len(data)
+    if size > min(MAX_FILE_BYTES, MAX_REPORT_BYTES):
         report[f"{key}_note"] = "This report exceeds the download limit. Narrow the audit or export it with the CLI."
+        return
+    try:
+        content = TemporaryFile(buffering=0)
+        try:
+            if content.write(data) != size:
+                raise OSError("Incomplete temporary report write.")
+        except OSError:
+            content.close()
+            raise
+    except OSError:
+        logging.getLogger(__name__).warning("Could not store a temporary report.")
+        report[f"{key}_note"] = "The report download is temporarily unavailable. Run the audit again or use the CLI."
         return
     token = secrets.token_urlsafe(24)
     with REPORT_LOCK:
         now = monotonic()
         remove_expired_reports(now)
         while REPORTS and (len(REPORTS) >= MAX_REPORTS
-                           or sum(len(item[1]) for item in REPORTS.values()) + len(data) > MAX_REPORT_BYTES):
-            REPORTS.popitem(last=False)
-        REPORTS[token] = (now + REPORT_LIFETIME, data, filename, media_type)
+                           or sum(item.size for item in REPORTS.values()) + size > MAX_REPORT_BYTES):
+            _, evicted = REPORTS.popitem(last=False)
+            evicted.file.close()
+        REPORTS[token] = CachedReport(content, now + REPORT_LIFETIME, size, filename, media_type)
     extension = filename.rsplit(".", 1)[-1]
     report[f"{key}_download"] = {
         "url": f"https://{PUBLIC_HOST}{REPORT_PATH}/{token}.{extension}",
@@ -211,21 +249,42 @@ def attach_report(report, key, data, filename, media_type):
     }
 
 
-async def download_report(request: Request) -> Response:
+class ReportDownload(StreamingResponse):
+    def __init__(self, item: CachedReport):
+        # Open a handle before eviction can close the cached file.
+        self.file = os.fdopen(os.dup(item.file.fileno()), "rb", buffering=0)
+        super().__init__(self.chunks(item.size), media_type=item.media_type, headers={
+            "Content-Disposition": f'attachment; filename="{item.filename}"',
+            "Content-Length": str(item.size),
+            "Cache-Control": "no-store",
+            "Referrer-Policy": "no-referrer",
+            "X-Content-Type-Options": "nosniff",
+        })
+
+    def chunks(self, size: int):
+        for offset in range(0, size, REPORT_CHUNK_SIZE):
+            # Duplicated handles share a cursor. Keep each seek and read together.
+            with REPORT_LOCK:
+                self.file.seek(offset)
+                chunk = self.file.read(REPORT_CHUNK_SIZE)
+            yield chunk
+
+    async def __call__(self, scope, receive, send):
+        try:
+            await super().__call__(scope, receive, send)
+        finally:
+            self.file.close()
+
+
+def download_report(request: Request) -> Response:
     token, extension = request.path_params["token"], request.path_params["extension"]
     with REPORT_LOCK:
         remove_expired_reports(monotonic())
         item = REPORTS.get(token)
-    if item is None or not item[2].endswith("." + extension):
-        return Response("This report has expired or is unavailable. Run the audit again to regenerate it.",
-                        status_code=404, media_type="text/plain", headers={"Cache-Control": "no-store"})
-    _, content, filename, media_type = item
-    return Response(content, media_type=media_type, headers={
-        "Content-Disposition": f'attachment; filename="{filename}"',
-        "Cache-Control": "no-store",
-        "Referrer-Policy": "no-referrer",
-        "X-Content-Type-Options": "nosniff",
-    })
+        if item is not None and item.filename.endswith("." + extension):
+            return ReportDownload(item)
+    return Response("This report has expired or is unavailable. Run the audit again to regenerate it.",
+                    status_code=404, media_type="text/plain", headers={"Cache-Control": "no-store"})
 
 
 def allowed_attachment_url(url: str) -> bool:
@@ -441,6 +500,24 @@ def invalid(message: str) -> ToolResult:
 
 def create_app():
     app = mcp.streamable_http_app()
+    mcp_lifespan = app.router.lifespan_context
+
+    @asynccontextmanager
+    async def lifespan(application):
+        async with mcp_lifespan(application):
+            cleanup = asyncio.create_task(expire_idle_reports())
+            try:
+                yield
+            finally:
+                cleanup.cancel()
+                with suppress(asyncio.CancelledError):
+                    await cleanup
+                with REPORT_LOCK:
+                    for item in REPORTS.values():
+                        item.file.close()
+                    REPORTS.clear()
+
+    app.router.lifespan_context = lifespan
     app.add_route(REPORT_PATH + "/{token}.{extension}", download_report, methods=["GET"])
     return app
 
