@@ -111,6 +111,15 @@ class GuidedAuditTests(unittest.TestCase):
                              "with your website URL and the pages you want to improve.")
             self.assertTrue(all(expert_contact[i].find("s:rPr/s:b", namespaces) is not None for i in (0, 2)))
 
+    def test_workbook_start_here_with_medium_priority_only(self):
+        result = audit(sample("links.csv"), sample("pages.csv"), include_worklist=True)
+        tasks = result["worklist_tasks"]
+        self.assertEqual({task["priority"] for task in tasks}, {"Medium"})
+        with ZipFile(io.BytesIO(create_workbook(result, tasks))) as workbook:
+            sheet = ET.fromstring(workbook.read("xl/worksheets/sheet1.xml"))
+        start_here = sheet.findtext(".//s:c[@r='C7']/s:is/s:t", namespaces={"s": SPREADSHEET_NS})
+        self.assertEqual(start_here, "Start at the top of the table. Open Page to edit and follow How to fix it.")
+
 
 class ExcelDownloadTests(unittest.IsolatedAsyncioTestCase):
     async def test_download_headers_and_expiry(self):

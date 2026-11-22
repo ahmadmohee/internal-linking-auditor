@@ -230,7 +230,7 @@ async def download_report(request: Request) -> Response:
 
 def allowed_attachment_url(url: str) -> bool:
     configured = re.split(r"[\s,]+", os.getenv("SEO_ATTACHMENT_HOSTS", "").casefold())
-    # Only OpenAI's attachment domains are supported. Exact allowlists prevent arbitrary URL fetching.
+    # Limit downloads to OpenAI attachment hosts.
     extra_hosts = {
         host for host in configured
         if re.fullmatch(r"[a-z0-9][a-z0-9.-]*\.oaiusercontent\.com", host)
@@ -239,9 +239,11 @@ def allowed_attachment_url(url: str) -> bool:
         if len(url) > 16_384 or re.search(r"[\x00-\x20\x7f\\]", url):
             return False
         address = urlsplit(url)
+        hostname = address.hostname or ""
         return (
             address.scheme == "https"
-            and address.hostname in (ATTACHMENT_HOSTS | extra_hosts)
+            and (hostname in (ATTACHMENT_HOSTS | extra_hosts)
+                 or re.fullmatch(r"sdmntpr[a-z0-9]{1,56}\.oaiusercontent\.com", hostname) is not None)
             and address.port in {443, None}
             and address.username is None
             and not address.fragment

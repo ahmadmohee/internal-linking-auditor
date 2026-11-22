@@ -141,7 +141,7 @@ For a private ChatGPT test, make the server reachable on HTTPS or use a supporte
 
 > Audit these Search Console exports. Show the five most important pages with low reported internal link counts. List missing-from-export pages separately and give me relevant source pages to review.
 
-The file tool declares the OpenAI file parameter metadata. Attachment retrieval is restricted to HTTPS, with no redirects, and defaults to `files.oaiusercontent.com`. If a deployment uses another confirmed OpenAI attachment host, add the exact `.oaiusercontent.com` hostname via `SEO_ATTACHMENT_HOSTS`. Paste small CSVs with the text tool or use the local CLI if your deployment’s attachment host is unsupported.
+The file tool declares the OpenAI file parameter metadata. Attachment retrieval uses HTTPS without redirects. It accepts `files.oaiusercontent.com` and regional `sdmntpr<region>.oaiusercontent.com` endpoints. If a deployment uses another confirmed OpenAI attachment host, add the exact `.oaiusercontent.com` hostname via `SEO_ATTACHMENT_HOSTS`. Paste small CSVs with the text tool or use the local CLI if your deployment’s attachment host is unsupported.
 
 Keep using `uvicorn server:create_app --factory --host 0.0.0.0 --port 8000` on Northflank.
 A public deployment with `SEO_PUBLIC_MCP_HOST` set serves the single-sheet Excel audit and follow-up reports. Downloads are held in memory on the serving instance for up to 15 minutes.
@@ -155,7 +155,7 @@ privacy disclosures cover the temporary report download and any hosting logs you
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.2.
+The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.3.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
 update the URL and the corresponding runtime hostname. Finish the listing metadata and review
 materials required by the submission flow, including a privacy policy reflecting the deployment.
