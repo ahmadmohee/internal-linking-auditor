@@ -1,0 +1,16 @@
+Source,Destination,Type,Anchor Text,Link Position,Link Path
+https://example.com/,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/heat-pump-running-costs,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/heat-pump-sizing,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-1,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-2,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-3,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-4,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-5,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/guides/resource-6,https://example.com/services/heat-pump-installation,Hyperlink,Installation,Navigation,/html/body/header/nav/a[1]
+https://example.com/,https://example.com/old-heat-pump-grants,Hyperlink,Grants,Footer,/html/body/footer/a[2]
+https://example.com/guides/heat-pump-running-costs,https://example.com/old-heat-pump-grants,Hyperlink,Grants,Footer,/html/body/footer/a[2]
+https://example.com/guides/heat-pump-running-costs,https://example.com/missing-checklist,Hyperlink,Checklist,Content,
+https://example.com/guides/heat-pump-sizing,https://example.com/missing-checklist,Hyperlink,Checklist,Content,
+https://example.com/guides/heat-pump-running-costs,https://example.com/contact,Hyperlink,Contact,Navigation,
+https://example.com/guides/heat-pump-sizing,https://example.com/contact,Hyperlink,Contact,Navigation,

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
-  "version": "0.1.0",
+  "version": "0.5.2",
   "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
   "author": {
     "name": "Ahmad Mohee",
@@ -13,16 +13,21 @@
       "interface": {
         "displayName": "Internal Linking Auditor",
         "shortDescription": "Audit internal links for SEO",
-        "longDescription": "Run a technical SEO internal linking audit with Google Search Console. Upload the Internal Links CSV and Performance Pages.csv from the same property. Find important pages with few reported internal links, prioritize targets by search impressions and clicks, and discover relevant pages to link from. Add Screaming Frog crawl and All Inlinks exports to exclude links already observed, suggest descriptive anchor text, and flag internal links that point to redirects or error URLs.\n\nTry asking:\n- Which important pages on my website have too few internal links?\n- Where should I add internal links, and what anchor text should I use?\n- Which internal links point to a 404 or a redirect?\n\nLooking for orphan pages? The tool lists URLs missing from the Search Console Links report for follow-up. If a URL is absent from that sampled report, its link count is unknown. Review the suggested links on your live pages before editing.",
+        "longDescription": "Audit your website’s internal links with Google Search Console and optional Screaming Frog exports. Get one Excel sheet that explains what the audit found, which pages to edit first, and how to fix each issue. It includes clickable page links, suggested link text, and steps for checking changes after publishing. Upload the saved report and a fresh crawl to see which fixes the crawl confirms.",
         "developerName": "Ahmad Mohee",
         "category": "Productivity",
+        "websiteURL": "https://www.linkedin.com/pulse/internal-link-audit-search-console-chatgpt-linking-auditor-mohee-0clle",
         "supportURL": "https://www.linkedin.com/in/ahmadmohee/",
         "defaultPrompt": [
-          "Which important pages on my website have too few internal links?",
-          "Where should I add internal links, and what anchor text should I use?",
-          "Which internal links point to a 404 or a redirect?"
-        ]
-      }
+          "Start an internal linking audit. What website details and Search Console files do you need?",
+          "Find the internal links I should add or fix and give me one Excel report with exact instructions.",
+          "Check which fixes in my saved Excel report appear in this new crawl."
+        ],
+        "composerIcon": "./assets/logo.png",
+        "logo": "./assets/logo.png",
+        "brandColor": "#163D52"
+      },
+      "onboardingSkill": "./skills/guided-internal-linking-audit/SKILL.md"
     }
   }
 }
