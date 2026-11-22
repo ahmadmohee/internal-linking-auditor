@@ -144,18 +144,22 @@ For a private ChatGPT test, make the server reachable on HTTPS or use a supporte
 The file tool declares the OpenAI file parameter metadata. Attachment retrieval uses HTTPS without redirects. It accepts `files.oaiusercontent.com` and regional `sdmntpr<region>.oaiusercontent.com` endpoints. If a deployment uses another confirmed OpenAI attachment host, add the exact `.oaiusercontent.com` hostname via `SEO_ATTACHMENT_HOSTS`. Paste small CSVs with the text tool or use the local CLI if your deployment’s attachment host is unsupported.
 
 Keep using `uvicorn server:create_app --factory --host 0.0.0.0 --port 8000` on Northflank.
-A public deployment with `SEO_PUBLIC_MCP_HOST` set serves the single-sheet Excel audit and follow-up reports. Downloads are held in memory on the serving instance for up to 15 minutes.
+A public deployment with `SEO_PUBLIC_MCP_HOST` set serves the single-sheet Excel audit and follow-up reports.
+The server streams completed reports from private temporary files on the serving instance. It keeps up to
+100 reports or 24 MiB, whichever limit is reached first. Links expire after 15 minutes. The server closes
+expired files during requests and checks for idle files every 30 seconds. Use a disk-backed system temporary
+directory to keep the stored reports out of application memory.
 Run one worker per endpoint so requests reach the instance holding the report.
 Anyone with the URL can download the report while it is active. An instance restart or cache eviction
 may end availability sooner. Run the audit again to regenerate the link.
 
 Audit inputs are processed in memory. The server does not persist raw CSVs, edit websites,
-or request access to Search Console. When replacing a production deployment, ensure your
-privacy disclosures cover the temporary report download and any hosting logs you collect.
+or request access to Search Console. Privacy disclosures should cover the temporary storage of generated
+reports and any hosting logs you collect.
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.3.
+The `plugin/` folder contains the manifests and a guided onboarding workflow for v0.5.4.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
 update the URL and the corresponding runtime hostname. Finish the listing metadata and review
 materials required by the submission flow, including a privacy policy reflecting the deployment.

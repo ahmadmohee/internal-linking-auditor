@@ -1,11 +1,15 @@
+import asyncio
 import io
 import unittest
+from collections import OrderedDict
 from unittest.mock import patch
 from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
 from zipfile import ZipFile
 
 import httpx
+from starlette.applications import Starlette
+from starlette.requests import Request
 
 from audit import audit
 from link_report import LOGO_PATH, SPREADSHEET_NS, XLSX_MIME_TYPE, action_rows, create_workbook
@@ -122,8 +126,13 @@ class GuidedAuditTests(unittest.TestCase):
 
 
 class ExcelDownloadTests(unittest.IsolatedAsyncioTestCase):
+    def setUp(self):
+        self.enterContext(patch.object(server, "PUBLIC_HOST", "reports.example"))
+        self.enterContext(patch.object(server, "REPORTS", OrderedDict()))
+        self.enterContext(patch.object(server.mcp, "streamable_http_app", side_effect=Starlette))
+
     async def test_download_headers_and_expiry(self):
-        with patch.object(server, "PUBLIC_HOST", "reports.example"), patch("server.monotonic", return_value=100.0):
+        with patch("server.monotonic", return_value=100.0):
             result = server.audit_internal_link_csv(
                 sample("links.csv"), sample("pages.csv"), website_url="example.com",
                 focus_keywords=["trail running shoes"], include_excel=True,
@@ -136,6 +145,67 @@ class ExcelDownloadTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(response.headers["content-type"], XLSX_MIME_TYPE)
                 self.assertIn(".xlsx", response.headers["content-disposition"])
                 self.assertEqual(response.headers["cache-control"], "no-store")
+                self.assertEqual(int(response.headers["content-length"]), len(response.content))
                 self.assertTrue(response.content.startswith(b"PK"))
             with patch("server.monotonic", return_value=1001.0):
                 self.assertEqual((await client.get(path)).status_code, 404)
+
+    async def test_report_count_and_size_limits_close_evicted_files(self):
+        app = server.create_app()
+        async with app.router.lifespan_context(app):
+            for _ in range(100):
+                server.attach_report({}, "excel", b"sample", "audit.xlsx", XLSX_MIME_TYPE)
+            self.assertEqual(len(server.REPORTS), 100)
+            oldest = next(iter(server.REPORTS.values()))
+            server.attach_report({}, "excel", b"new", "audit.xlsx", XLSX_MIME_TYPE)
+            self.assertTrue(oldest.file.closed)
+            self.assertEqual(len(server.REPORTS), 100)
+            with patch.object(server, "MAX_REPORT_BYTES", 10):
+                server.attach_report({}, "excel", b"x" * 8, "audit.xlsx", XLSX_MIME_TYPE)
+                self.assertEqual(sum(item.size for item in server.REPORTS.values()), 8)
+
+    async def test_open_downloads_complete_after_eviction(self):
+        payload = b"A" * server.REPORT_CHUNK_SIZE + b"B" * server.REPORT_CHUNK_SIZE + b"end"
+        app = server.create_app()
+        self.enterContext(patch.object(server, "MAX_REPORTS", 1))
+        async with app.router.lifespan_context(app):
+            server.attach_report({}, "excel", payload, "audit.xlsx", XLSX_MIME_TYPE)
+            token, cached = next(iter(server.REPORTS.items()))
+            request = Request({"type": "http", "path_params": {"token": token, "extension": "xlsx"}})
+            first = server.download_report(request)
+            second = server.download_report(request)
+            server.attach_report({}, "excel", b"replacement", "audit.xlsx", XLSX_MIME_TYPE)
+            self.assertTrue(cached.file.closed)
+
+            async def collect(response):
+                received = []
+
+                async def send(message):
+                    if message["type"] == "http.response.body":
+                        received.append(message["body"])
+                    await asyncio.sleep(0)
+
+                await response({"type": "http", "asgi": {"spec_version": "2.4"}}, None, send)
+                self.assertTrue(response.file.closed)
+                return b"".join(received)
+
+            self.assertEqual(await asyncio.gather(collect(first), collect(second)), [payload, payload])
+
+    async def test_expired_reports_close_when_idle_and_at_shutdown(self):
+        app = server.create_app()
+        with patch.object(server, "REPORT_CLEANUP_INTERVAL", 0.005), patch("server.monotonic", return_value=100.0) as clock:
+            async with app.router.lifespan_context(app):
+                server.attach_report({}, "excel", b"expired", "audit.xlsx", XLSX_MIME_TYPE)
+                expired = next(iter(server.REPORTS.values()))
+                clock.return_value = 1001.0
+
+                async def wait_for_expiry():
+                    while not expired.file.closed:
+                        await asyncio.sleep(0.005)
+
+                await asyncio.wait_for(wait_for_expiry(), timeout=1)
+                self.assertFalse(server.REPORTS)
+                server.attach_report({}, "excel", b"live", "audit.xlsx", XLSX_MIME_TYPE)
+                live = next(iter(server.REPORTS.values()))
+                self.assertFalse(live.file.closed)
+            self.assertTrue(live.file.closed)
