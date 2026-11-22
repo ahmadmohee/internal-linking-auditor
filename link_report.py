@@ -357,7 +357,7 @@ def create_workbook(report: dict, tasks: list[dict], *, verification=False) -> b
     note(5, "Site and scope", str(source)[:350])
     note(6, "What we found", outcome, 38 if len(outcome) > 140 else 25)
     start = ("Filter Status to Still open or Check manually, then follow the instructions beside each finding."
-             if verification else "Filter Priority to High. Open Page to edit and follow How to fix it.")
+             if verification else "Start at the top of the table. Open Page to edit and follow How to fix it.")
     note(7, "Start here", start if tasks else "Check that the exports cover the site and period you intended to audit.")
     note(8, "Track the work", "After publishing, open the live page and click the updated link. Set Status to Done when it works.")
     note(9, "Check the next crawl", "Upload this workbook with fresh Screaming Frog Internal and All Inlinks CSVs. The next report shows which fixes the crawl confirmed.")

@@ -93,12 +93,20 @@ class AttachmentTests(unittest.IsolatedAsyncioTestCase):
             self.assertNotIn("private", str(error.exception))
 
     async def test_attachment_hosts(self):
+        for region in ("ukwest", "denmarkeast", "eastus2"):
+            self.assertTrue(allowed_attachment_url(f"https://sdmntpr{region}.oaiusercontent.com/test"))
         for url in (
             "http://files.oaiusercontent.com/test",
             "https://files.oaiusercontent.com.evil.example/test",
             "https://user@files.oaiusercontent.com/test",
             "https://files.oaiusercontent.com:8443/test",
             "https://127.0.0.1/test",
+            "http://sdmntprukwest.oaiusercontent.com/test",
+            "https://sdmntprukwest.oaiusercontent.com:8443/test",
+            "https://sdmntprukwest.oaiusercontent.com.example.org/test",
+            "https://nested.sdmntprukwest.oaiusercontent.com/test",
+            "https://sdmntpr.oaiusercontent.com/test",
+            "https://other.oaiusercontent.com/test",
         ):
             self.assertFalse(allowed_attachment_url(url))
         with patch.dict(os.environ, {"SEO_ATTACHMENT_HOSTS": "test.oaiusercontent.com,example.org"}):
