@@ -29,7 +29,8 @@ from link_report import (FINDINGS_FOOTER, XLSX_MIME_TYPE, action_rows, audit_tot
 
 from link_worklist import CSV_MIME_TYPE, task_preview, verify, worklist_csv
 
-ATTACHMENT_HOSTS = {"files.oaiusercontent.com"}
+ATTACHMENT_HOSTS = {"files.oaiusercontent.com",
+    "oaisdmntprdenmarkeast.blob.core.windows.net"}
 INLINE_LIMIT = 150_000
 REPORT_PATH = "/internal-link-reports"
 REPORT_LIFETIME = 15 * 60
