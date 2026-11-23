@@ -25,6 +25,12 @@ I can help review your internal-link opportunities, choose the pages worth linki
 
 - [About Ahmad Mohee](https://www.dbc21.com/p/about.html) · [LinkedIn](https://www.linkedin.com/in/ahmadmohee/)
 
+## v0.5.7 maintenance update
+
+- Accepts ChatGPT CSV attachment downloads from the observed trusted Azure Blob hostname, while preserving existing HTTPS-only and hostname security checks.
+- Includes regression coverage for the attachment-host allowlist, alongside the Screaming Frog `Status Code`/`Status` and `Destination`/`Target` parsing fixes introduced in v0.5.6.
+- The plugin remains completely free to use, with no third-party account connection or website login required.
+
 ## Questions you can ask in ChatGPT
 
 - Which important pages on my website have too few internal links?
@@ -170,7 +176,7 @@ reports and any hosting logs you collect.
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests, review cases, and guided onboarding workflow for v0.5.6.
+The `plugin/` folder contains the manifests, review cases, and guided onboarding workflow for v0.5.7.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
 update the URL and the corresponding runtime hostname. The listing points to the DBC21 product, support,
 privacy and terms pages. Add a reviewer-accessible demo recording in the submission portal.
