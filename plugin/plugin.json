@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
   "version": "0.5.6",
-  "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
+  "description": "Completely free ChatGPT plugin for SEO internal-link audits using uploaded CSVs. No third-party account, external service connection, or website login required.",
   "author": {
     "name": "Ahmad Mohee",
     "email": "ahmadmohee@gmail.com",
@@ -12,8 +12,8 @@
     "com.openai": {
       "interface": {
         "displayName": "Internal Linking Auditor",
-        "shortDescription": "Audit internal links for SEO",
-        "longDescription": "Audit your website’s internal links with Google Search Console and optional Screaming Frog exports. Get one Excel sheet that explains what the audit found, which pages to edit first, and how to fix each issue. It includes clickable page links, suggested link text, and steps for checking changes after publishing. Upload the saved report and a fresh crawl to see which fixes the crawl confirms.",
+        "shortDescription": "Free SEO link audits—no external account connections",
+        "longDescription": "Completely free—no plugin fees or paid upgrades. No external service or website connection required: no third-party account, Search Console authorization, API key, or site login. Upload two Search Console CSV exports directly in ChatGPT; optional Screaming Frog CSVs add detail. Receive an Excel plan with prioritized internal links, anchors, and fixes. Upload the report and a new crawl to verify edits. Files are processed by the plugin's hosted MCP server; it never edits your website.",
         "developerName": "Ahmad Mohee",
         "category": "Productivity",
         "websiteURL": "https://www.dbc21.com/p/internal-linking-auditor.html",
