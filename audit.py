@@ -107,6 +107,17 @@ def csv_rows(content: str, label: str, columns: dict, required: set):
         index = {}
         for field, aliases in columns.items():
             matches = [i for i, name in enumerate(header) if name in aliases]
+            # Screaming Frog exports include both a numeric Status Code and a
+            # descriptive Status, and both an URL Destination and HTML Target
+            # (_blank / _self). These are different attributes, not duplicate
+            # representations of the same field. Prefer the semantic column;
+            # still reject genuinely competing URL/code columns.
+            if label == "Crawl Pages CSV" and field == "status":
+                if any(header[i] in {"status code", "http status"} for i in matches):
+                    matches = [i for i in matches if header[i] != "status"]
+            elif label == "Crawl Inlinks CSV" and field == "target":
+                if any(header[i] in {"destination", "destination url"} for i in matches):
+                    matches = [i for i in matches if header[i] != "target"]
             if len(matches) > 1:
                 raise ValueError(f"{label} has ambiguous columns for {field}.")
             if matches:

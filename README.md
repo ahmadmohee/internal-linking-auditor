@@ -4,6 +4,10 @@
 
 A ChatGPT Plugin to help you audit and optimize your website internal linking profile.
 
+**Completely free to use — no plugin fees, separate subscription, or paid upgrades. No external account, service connection, or website login is required.**
+
+You do **not** have to connect Google Search Console to this plugin, authorize a Google account, supply an API key, install anything on your website, or log in to a third-party SEO service. Download the required CSV exports from your existing Google Search Console property and upload them directly in ChatGPT. Screaming Frog crawl exports are optional. The plugin processes uploaded files through its hosted MCP service; it does not sign in to Search Console or modify your website. ChatGPT availability may depend on your OpenAI plan.
+
 Run a guided internal linking audit using Google Search Console and optional Screaming Frog exports. Prioritize the pages that matter to the business, find contextual links with suggested anchors, and give the editor or developer one Excel sheet of specific instructions. Re-upload the workbook with a fresh crawl to see which edits were confirmed.
 
 [Plugin website](https://www.dbc21.com/p/internal-linking-auditor.html) · [Support](https://www.dbc21.com/p/contact.html) · [Privacy Policy](https://www.dbc21.com/p/privacy.html) · [Terms of Service](https://www.dbc21.com/p/terms-of-service.html)
@@ -13,6 +17,8 @@ Run a guided internal linking audit using Google Search Console and optional Scr
 ## Developer and expert audits
 
 Developed by **Ahmad Mohee**, an SEO specialist.
+
+**The plugin itself is free; expert consulting is optional and separate.**
 
 **Need your audit performed by an expert?** Contact Ahmad Mohee at [ahmadmohee@gmail.com](mailto:ahmadmohee@gmail.com).
 I can help review your internal-link opportunities, choose the pages worth linking to first, and turn the findings into an editing plan for your team.
@@ -127,6 +133,8 @@ python3 audit.py --website https://example.com --keyword "waterproof trail runni
 - The tool preserves differences in scheme, hostname, path, and query. It removes URL fragments and default ports. It does not merge canonical or redirect variants. Keep Search Console and crawler exports scoped consistently.
 - Files are limited to 8 MiB each and 150,000 rows. The crawl page inventory is limited to 25,000 unique URLs. The MCP text fallback accepts up to 150,000 characters per input.
 
+- **Screaming Frog export compatibility:** full Internal exports may contain both `Status Code` (numeric HTTP status) and `Status` (descriptive label); full All Inlinks exports may contain both `Destination` (linked URL) and `Target` (HTML target such as `_blank`). The importer reads `Status Code` and `Destination` and preserves legacy single-column aliases. Genuinely conflicting headers still trigger a validation error. See the three `*-full-headers.csv` fixtures under `examples/sprint/` for a reproducible audit-and-verification test.
+
 ## Run the MCP server
 
 ```sh
@@ -162,7 +170,7 @@ reports and any hosting logs you collect.
 
 ## Packaging for submission
 
-The `plugin/` folder contains the manifests, review cases, and guided onboarding workflow for v0.5.5.
+The `plugin/` folder contains the manifests, review cases, and guided onboarding workflow for v0.5.6.
 `plugin/mcp.json` points to the Oracle endpoint at `https://gpt.dbc21.com/mcp`. If you use a different public hostname,
 update the URL and the corresponding runtime hostname. The listing points to the DBC21 product, support,
 privacy and terms pages. Add a reviewer-accessible demo recording in the submission portal.
