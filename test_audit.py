@@ -114,5 +114,25 @@ class AttachmentTests(unittest.IsolatedAsyncioTestCase):
             self.assertFalse(allowed_attachment_url("https://example.org/file"))
 
 
+    async def test_azure_blob_attachment_host(self):
+        host = "oaisdmntprdenmarkeast.blob.core.windows.net"
+
+        # Accept the exact trusted host over HTTPS.
+        self.assertTrue(
+            allowed_attachment_url(f"https://{host}/file.csv?sig=test")
+        )
+
+        # Reject insecure or untrusted alternatives.
+        rejected = [
+            f"http://{host}/file.csv",
+            f"https://{host}:8443/file.csv",
+            f"https://{host}.evil.example/file.csv",
+            "https://untrusted.blob.core.windows.net/file.csv",
+        ]
+
+        for url in rejected:
+            with self.subTest(url=url):
+                self.assertFalse(allowed_attachment_url(url))
+
 if __name__ == "__main__":
     unittest.main()
