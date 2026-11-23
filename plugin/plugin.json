@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "A ChatGPT Plugin to help you audit and optimize your website internal linking profile",
   "author": {
     "name": "Ahmad Mohee",
@@ -45,8 +45,8 @@
               "tools_triggered": "audit_internal_link_files",
               "expected_behavior": "Returns one working Excel link and explains the first actions in workbook order. Treats source suggestions as candidates and reports missing Search Console link counts as unknown.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/links.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/pages.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/pages.csv"
               ]
             },
             {
@@ -55,21 +55,21 @@
               "tools_triggered": "audit_internal_link_files",
               "expected_behavior": "Shows two high-priority content placements first in both chat and Excel, with the source, sentence and anchor, plus zero observed main-content sources and nine navigation sources for the priority destination in the supplied crawl.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/links.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-inlinks-before.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/snippets.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-before.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/snippets.csv"
               ]
             },
             {
               "description": "Verify links using the workbook from the previous case",
-              "prompt": "In the same chat as the crawl and snippets test, reattach its downloaded Excel workbook together with crawl-pages.csv and crawl-inlinks-after.csv from https://github.com/ahmadmohee/internal-linking-auditor/tree/v0.5.4/examples/sprint. Which edits are confirmed?",
+              "prompt": "In the same chat as the crawl and snippets test, reattach its downloaded Excel workbook together with crawl-pages.csv and crawl-inlinks-after.csv from https://github.com/ahmadmohee/internal-linking-auditor/tree/v0.5.6/examples/sprint. Which edits are confirmed?",
               "tools_triggered": "verify_internal_link_edits_files",
               "expected_behavior": "Verifies the new content link from the running costs guide, leaves the sizing guide addition open, and provides one updated Excel report.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.4/examples/sprint/crawl-inlinks-after.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-after.csv"
               ]
             },
             {
@@ -77,6 +77,19 @@
               "prompt": "Audit https://example.com as a general audit. Use my pasted exports below and give me an Excel report.\nInternal Links CSV:\nTarget page,Internal links\nhttps://example.com/,420\nhttps://example.com/guides/trail-running-shoes,22\nhttps://example.com/guides/waterproof-trail-running-shoes,18\nhttps://example.com/guides/trail-running-shoe-fit,16\nhttps://example.com/shoes/waterproof-trail-running-shoes,1\nhttps://example.com/guides/trail-running-waterproof-checklist,9\nhttps://example.com/guides/road-running-shoes,24\nPerformance Pages CSV:\nTop pages,Clicks,Impressions,CTR,Position\nhttps://example.com/,5130,69378,7.39%,3.7\nhttps://example.com/shoes/waterproof-trail-running-shoes,173,13620,1.27%,8.4\nhttps://example.com/guides/trail-running-shoes,650,16000,4.06%,5.2\nhttps://example.com/guides/waterproof-trail-running-shoes,411,10551,3.90%,7.2\nhttps://example.com/guides/trail-running-shoe-fit,270,9100,2.97%,8.8\nhttps://example.com/guides/trail-running-waterproof-checklist,304,8300,3.66%,6.3\nhttps://example.com/shoes/trail-running-shoe-sizing,62,6140,1.01%,12.3\nhttps://example.com/guides/road-running-shoes,212,5990,3.54%,8.1",
               "tools_triggered": "audit_internal_link_csv",
               "expected_behavior": "Uses the actual CSV text to return an audit and Excel link without asking for duplicate files."
+            },
+            {
+              "description": "Accept standard Screaming Frog exports with both Status Code and Status, and Destination and Target",
+              "prompt": "Audit https://example.com using the attached Search Console and full-header Screaming Frog exports. Prioritize the heat pump installation service page and return an Excel plan.",
+              "tools_triggered": "audit_internal_link_files",
+              "expected_behavior": "Parses the numeric Status Code and URL Destination without confusing them with the descriptive Status or HTML Target attribute. Produces two verified placement candidates in the workbook without an ambiguous-column error.",
+              "file_attachment_urls": [
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages-full-headers.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-before-full-headers.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/snippets.csv"
+              ]
             }
           ],
           "negative": [
@@ -101,7 +114,7 @@
         }
       },
       "publication": {
-        "release_notes": "Aligns the chat summary’s first actions and task counts with the downloadable Excel worklist. Adds DBC21 product, support, privacy, and terms links to the plugin listing."
+        "release_notes": "Fixes Screaming Frog full-export parsing when Internal includes both Status Code and Status or All Inlinks contains Destination and Target. Preserves legacy aliases and adds regression tests; no changes to the MCP endpoint or audit workflow."
       }
     }
   },

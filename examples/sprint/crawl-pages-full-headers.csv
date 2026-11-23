@@ -1,0 +1,15 @@
+Address,Status Code,Status,Indexability,H1-1,Content Type
+https://example.com/services/heat-pump-installation,200,OK,Indexable,Heat pump installation,text/html
+https://example.com/guides/heat-pump-running-costs,200,OK,Indexable,Heat pump running costs,text/html
+https://example.com/guides/heat-pump-sizing,200,OK,Indexable,Heat pump sizing guide,text/html
+https://example.com/services/heat-pump-maintenance,200,OK,Indexable,Heat pump maintenance,text/html
+https://example.com/old-heat-pump-grants,301,Moved Permanently,Non-Indexable,,text/html
+https://example.com/missing-checklist,404,Not Found,Non-Indexable,,text/html
+https://example.com/contact,200,OK,Indexable,Contact,text/html
+https://example.com/,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-1,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-2,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-3,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-4,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-5,200,OK,Indexable,Heating resources,text/html
+https://example.com/guides/resource-6,200,OK,Indexable,Heating resources,text/html
