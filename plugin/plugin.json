@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "internal-linking-auditor",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Completely free ChatGPT plugin for SEO internal-link audits using uploaded CSVs. No third-party account, external service connection, or website login required.",
   "author": {
     "name": "Ahmad Mohee",
@@ -45,8 +45,8 @@
               "tools_triggered": "audit_internal_link_files",
               "expected_behavior": "Returns one working Excel link and explains the first actions in workbook order. Treats source suggestions as candidates and reports missing Search Console link counts as unknown.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/links.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/pages.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/pages.csv"
               ]
             },
             {
@@ -55,11 +55,11 @@
               "tools_triggered": "audit_internal_link_files",
               "expected_behavior": "Shows two high-priority content placements first in both chat and Excel, with the source, sentence and anchor, plus zero observed main-content sources and nine navigation sources for the priority destination in the supplied crawl.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/links.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-before.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/snippets.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-inlinks-before.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/snippets.csv"
               ]
             },
             {
@@ -68,8 +68,8 @@
               "tools_triggered": "verify_internal_link_edits_files",
               "expected_behavior": "Verifies the new content link from the running costs guide, leaves the sizing guide addition open, and provides one updated Excel report.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-after.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-inlinks-after.csv"
               ]
             },
             {
@@ -84,11 +84,11 @@
               "tools_triggered": "audit_internal_link_files",
               "expected_behavior": "Parses the numeric Status Code and URL Destination without confusing them with the descriptive Status or HTML Target attribute. Produces two verified placement candidates in the workbook without an ambiguous-column error.",
               "file_attachment_urls": [
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/links.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/pages.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-pages-full-headers.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/crawl-inlinks-before-full-headers.csv",
-                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.6/examples/sprint/snippets.csv"
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/links.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/pages.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-pages-full-headers.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/crawl-inlinks-before-full-headers.csv",
+                "https://raw.githubusercontent.com/ahmadmohee/internal-linking-auditor/refs/tags/v0.5.7/examples/sprint/snippets.csv"
               ]
             }
           ],
