@@ -85,6 +85,12 @@ FocusKeywords = Annotated[list[str], Field(
 READ_ONLY = ToolAnnotations(
     readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False,
 )
+EXTERNAL_READ_ONLY = ToolAnnotations(
+    readOnlyHint=True,
+    destructiveHint=False,
+    idempotentHint=True,
+    openWorldHint=True,
+)
 mcp = FastMCP(
     "Internal Linking Auditor",
     instructions=(
@@ -350,7 +356,7 @@ def decode_csv(content, label):
 @mcp.tool(
     title="Audit internal links from CSV attachments",
     structured_output=True,
-    annotations=READ_ONLY,
+    annotations=EXTERNAL_READ_ONLY,
     meta={"openai/fileParams": ["links_file", "performance_file", "crawl_pages_file", "crawl_inlinks_file",
                                 "snippets_file", "page_queries_file", "redirects_file"]},
 )
@@ -465,7 +471,7 @@ def verification_report(worklist: str | bytes, pages: str, inlinks: str) -> Tool
     return result
 
 
-@mcp.tool(title="Verify internal linking edits from an audit report and new crawl", structured_output=True, annotations=READ_ONLY,
+@mcp.tool(title="Verify internal linking edits from an audit report and new crawl", structured_output=True, annotations=EXTERNAL_READ_ONLY,
           meta={"openai/fileParams": ["worklist_file", "crawl_pages_file", "crawl_inlinks_file"]})
 async def verify_internal_link_edits_files(
     worklist_file: Annotated[ChatGPTFile, Field(description="Saved Excel audit report or legacy worklist CSV.")],
